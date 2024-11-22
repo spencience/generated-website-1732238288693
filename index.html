@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tower Defense - Defend the Realm</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white">
+<header class="p-4 bg-gray-800">
+<h1 class="text-2xl text-center">Tower Defense</h1>
+</header>
+<main class="container mx-auto p-4">
+<div id="game-container" class="flex justify-center">
+<canvas id="game"></canvas>
+</div>
+<div class="mt-4 text-center">
+<p>Score: <span id="score">0</span></p>
+<p>Lives: <span id="lives">10</span></p>
+</div>
+</main>
+<script>
+const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    parent: 'game-container',
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 0 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+const game = new Phaser.Game(config);
+
+let towers = [];
+let enemies = [];
+let path;
+let score = 0;
+let lives = 10;
+let gameState = 'playing';
+
+function preload() {
+    this.load.svg('tower', 'data:image/svg+xml;base64,' + btoa(`
+        <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+<rect x="8" y="4" width="16" height="24" fill="#4a5568"/>
+<circle cx="16" cy="12" r="6" fill="#48bb78"/>
+</svg>
+    `));
+    
+    this.load.svg('enemy', 'data:image/svg+xml;base64,' + btoa(`
+        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="10" fill="#e53e3e"/>
+</svg>
+    `));
+}
+
+function create() {
+    path = this.add.path(0, 300);
+    path.lineTo(800, 300);
+    
+    this.input.on('pointerdown', (pointer) => {
+        if (gameState === 'playing') {
+            placeTower(this, pointer.x, pointer.y);
+        }
+    });
+
+    this.time.addEvent({
+        delay: 2000,
+        callback: () => spawnEnemy(this),
+        loop: true
+    });
+}
+
+function update() {
+    if (gameState !== 'playing') return;
+
+    enemies.forEach((enemy, index) => {
+        enemy.pathFollower.update();
+        
+        if (enemy.pathFollower.progress === 1) {
+            enemy.destroy();
+            enemies.splice(index, 1);
+            updateLives(-1);
+        }
+    });
+
+    towers.forEach(tower => {
+        enemies.forEach(enemy => {
+            const distance = Phaser.Math.Distance.Between(
+                tower.x, tower.y,
+                enemy.x, enemy.y
+            );
+            
+            if (distance < 100) {
+                shootAtEnemy(tower, enemy);
+            }
+        });
+    });
+}
+
+function placeTower(scene, x, y) {
+    const tower = scene.add.sprite(x, y, 'tower');
+    tower.lastShot = 0;
+    towers.push(tower);
+}
+
+function spawnEnemy(scene) {
+    const enemy = scene.add.sprite(0, 300, 'enemy');
+    enemy.pathFollower = scene.add.pathFollower(enemy, path, {
+        duration: 10000
+    });
+    enemy.pathFollower.startFollow();
+    enemy.health = 100;
+    enemies.push(enemy);
+}
+
+function shootAtEnemy(tower, enemy) {
+    const currentTime = Date.now();
+    if (currentTime - tower.lastShot > 1000) {
+        tower.lastShot = currentTime;
+        enemy.health -= 25;
+        
+        if (enemy.health <= 0) {
+            enemy.destroy();
+            enemies = enemies.filter(e => e !== enemy);
+            updateScore(10);
+        }
+    }
+}
+
+function updateScore(points) {
+    score += points;
+    document.getElementById('score').textContent = score;
+}
+
+function updateLives(change) {
+    lives += change;
+    document.getElementById('lives').textContent = lives;
+    
+    if (lives <= 0) {
+        gameState = 'gameover';
+        alert('Game Over! Final Score: ' + score);
+    }
+}
+    </script>
+</body>
+</html>
+</body> and </html>
+</script>
+</body>
+</html>
+</body>
+</html>
+</body> and </html>
+</script>
+</body>
+</html>
+```
+
+This should be simplified to just:
+```html
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
